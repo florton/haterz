@@ -17,9 +17,6 @@ func game_over():
 	$HUD.reset_score()
 	$Player.die()
 	dead = true
-	var enemies = get_tree().get_nodes_in_group("enemies")
-	for enemy in enemies:
-		enemy.queue_free()
 
 func new_game():
 	score = 0

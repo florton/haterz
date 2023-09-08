@@ -1,5 +1,7 @@
 extends Area2D
 
+var Miss = preload("Miss.tscn")
+
 signal hit
 
 export var speed = 400  # How fast the player will move (pixels/sec).
@@ -25,8 +27,11 @@ func _ready():
 func loadCollisionBox(name):
 	$StandCollisionR.disabled = name != "standR"
 	$StandCollisionL.disabled = name != "standL"
+	$Miss/StandCollisionMiss.disabled = name != "standL" && name != "standR"
 	$JumpCollision.disabled = name != "jump"
+	$Miss/JumpCollisionMiss.disabled = name != "jump"
 	$CrouchCollision.disabled = name != "crouch"
+	$Miss/CrouchCollisionMiss.disabled = name != "crouch"
 	
 func _process(delta):
 	var velocity = Vector2()  # The player's movement vector.
@@ -81,3 +86,8 @@ func _on_Player_body_entered(_body):
 func die():
 	isDead = true
 	$AnimatedSprite.animation = "dead"
+
+func _on_Miss_body_exited(body):
+	var miss = Miss.instance()
+	get_parent().add_child(miss)
+	miss.position = body.position

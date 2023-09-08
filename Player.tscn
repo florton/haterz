@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Player.gd" type="Script" id=1]
 [ext_resource path="res://up.png" type="Texture" id=2]
@@ -45,6 +45,16 @@ height = 44.0436
 radius = 26.6763
 height = 6.97091
 
+[sub_resource type="CapsuleShape2D" id=6]
+radius = 41.0
+height = 72.0
+
+[sub_resource type="CircleShape2D" id=7]
+radius = 49.0102
+
+[sub_resource type="CircleShape2D" id=8]
+radius = 65.0077
+
 [node name="Player" type="Area2D"]
 script = ExtResource( 1 )
 __meta__ = {
@@ -55,8 +65,7 @@ __meta__ = {
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 0.25, 0.25 )
 frames = SubResource( 1 )
-animation = "crouch"
-flip_h = true
+animation = "up"
 __meta__ = {
 "_edit_lock_": true
 }
@@ -83,4 +92,19 @@ position = Vector2( 1, 2 )
 rotation = -0.706858
 shape = SubResource( 2 )
 
+[node name="Miss" type="Area2D" parent="."]
+
+[node name="StandCollisionMiss" type="CollisionShape2D" parent="Miss"]
+position = Vector2( -1, 0 )
+shape = SubResource( 6 )
+
+[node name="CrouchCollisionMiss" type="CollisionShape2D" parent="Miss"]
+position = Vector2( -2, 0 )
+shape = SubResource( 7 )
+
+[node name="JumpCollisionMiss" type="CollisionShape2D" parent="Miss"]
+position = Vector2( 1, -1 )
+shape = SubResource( 8 )
+
 [connection signal="body_entered" from="." to="." method="_on_Player_body_entered"]
+[connection signal="body_exited" from="Miss" to="." method="_on_Miss_body_exited"]
