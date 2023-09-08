@@ -1,6 +1,6 @@
 extends Area2D
 
-var Miss = preload("Miss.tscn")
+var Popup = preload("Popup.tscn")
 
 signal hit
 
@@ -14,8 +14,11 @@ const crouch_buffer = 30
 var gravity_acceleration = 0;
 var isDead = false
 
+var nearMisses = []
+
 func start(pos):
 	position = pos
+	nearMisses = []
 	isDead = false
 	$AnimatedSprite.animation = "walk"
 	show()
@@ -28,10 +31,13 @@ func loadCollisionBox(name):
 	$StandCollisionR.disabled = name != "standR"
 	$StandCollisionL.disabled = name != "standL"
 	$Miss/StandCollisionMiss.disabled = name != "standL" && name != "standR"
+	$NearMiss/StandCollisionNMiss.disabled = name != "standL" && name != "standR"
 	$JumpCollision.disabled = name != "jump"
 	$Miss/JumpCollisionMiss.disabled = name != "jump"
+	$NearMiss/JumpCollisionNMiss.disabled = name != "jump"
 	$CrouchCollision.disabled = name != "crouch"
 	$Miss/CrouchCollisionMiss.disabled = name != "crouch"
+	$NearMiss/CrouchCollisionNMiss.disabled = name != "crouch"
 	
 func _process(delta):
 	var velocity = Vector2()  # The player's movement vector.
@@ -53,7 +59,7 @@ func _process(delta):
 		$AnimatedSprite.stop()
 		
 	# gravity
-	gravity += 10
+	gravity += 20 if isCrouching else 10
 		
 	position.x += velocity.x * delta	
 	position.y += ((velocity.y * 1.2) + gravity)* delta	
@@ -88,6 +94,23 @@ func die():
 	$AnimatedSprite.animation = "dead"
 
 func _on_Miss_body_exited(body):
-	var miss = Miss.instance()
-	get_parent().add_child(miss)
-	miss.position = body.position
+	var pos = body.position
+	yield(get_tree().create_timer(0.2), "timeout")
+	if !(body in nearMisses):
+		var msg = Popup.instance()
+		msg.init("miss", Color(1,1,1))
+		msg.position = pos
+		if !get_parent().dead:
+			get_parent().score += 1
+			get_parent().add_child(msg)
+
+func _on_NearMiss_body_exited(body):
+	var pos = body.position
+	yield(get_tree().create_timer(0.1), "timeout")
+	nearMisses.append(body)
+	var msg = Popup.instance()
+	msg.init("Near\nMiss", Color(0.764706, 0.247059, 1))
+	msg.position = pos
+	if !get_parent().dead:
+		get_parent().score += 2
+		get_parent().add_child(msg)

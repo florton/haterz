@@ -20,6 +20,7 @@ func game_over():
 
 func new_game():
 	score = 0
+	dead = false
 	$Player.start($StartPosition.position)
 	$HUD/StartLabel.visible = true
 	$StartTimer.start()
