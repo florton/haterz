@@ -5,6 +5,7 @@ var willCurve = false
 func _ready():
 	var mob_types = $AnimatedSprite.frames.get_animation_names()
 	$AnimatedSprite.animation = mob_types[randi() % mob_types.size()]
+	$AnimatedSprite.frame = randi() % 3
 	
 func _process(delta):
 	if get_parent().dead:

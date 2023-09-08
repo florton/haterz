@@ -1,6 +1,8 @@
 extends Node
 
-export (PackedScene) var Mob
+var Mob = preload("Mob.tscn")
+var Boss = preload("Boss.tscn")
+
 var score
 var dead = false
 
@@ -14,6 +16,7 @@ func _ready():
 func game_over():
 	$ScoreTimer.stop()
 	$MobTimer.stop()
+	$BossTimer.stop()
 	$HUD.reset_score()
 	$Player.die()
 	dead = true
@@ -25,6 +28,7 @@ func new_game():
 	$HUD/StartLabel.visible = true
 	$StartTimer.start()
 	$MobTimer.wait_time = 0.75
+	$BossTimer.wait_time = 3
 
 func _process(_delta):	
 	if Input.is_action_pressed("ui_accept"):
@@ -34,6 +38,7 @@ func _process(_delta):
 func _on_StartTimer_timeout():
 	$HUD/StartLabel.visible = false
 	$MobTimer.start()
+	$BossTimer.start()
 	$ScoreTimer.start()
 
 func _on_ScoreTimer_timeout():
@@ -41,11 +46,11 @@ func _on_ScoreTimer_timeout():
 	$HUD.update_score(score)
 	$MobTimer.wait_time -= .01
 
-func _on_MobTimer_timeout():
+func spawn(enemy):
 	# Choose a random location on Path2D.
 	$MobPath/MobSpawnLocation.offset = randi()
 	# Create a Mob instance and add it to the scene.
-	var mob = Mob.instance()
+	var mob = enemy.instance()
 	
 	add_child(mob)
 	# Set the mob's direction perpendicular to the path direction.
@@ -62,3 +67,8 @@ func _on_MobTimer_timeout():
 	mob.linear_velocity = Vector2(rand_range(min_speed , max_speed), 0)
 	mob.linear_velocity = mob.linear_velocity.rotated(direction)
 
+func _on_MobTimer_timeout():
+	spawn(Mob)
+
+func _on_Bosstimer_timeout():
+	spawn(Boss)

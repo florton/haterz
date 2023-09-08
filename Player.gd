@@ -107,10 +107,11 @@ func _on_Miss_body_exited(body):
 func _on_NearMiss_body_exited(body):
 	var pos = body.position
 	yield(get_tree().create_timer(0.1), "timeout")
-	nearMisses.append(body)
-	var msg = Popup.instance()
-	msg.init("Near\nMiss", Color(0.764706, 0.247059, 1))
-	msg.position = pos
-	if !get_parent().dead:
-		get_parent().score += 2
-		get_parent().add_child(msg)
+	if !(body in nearMisses):
+		nearMisses.append(body)
+		var msg = Popup.instance()
+		msg.init("Near\nMiss", Color(0.764706, 0.247059, 1))
+		msg.position = pos
+		if !get_parent().dead:
+			get_parent().score += 2
+			get_parent().add_child(msg)
