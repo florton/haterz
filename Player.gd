@@ -1,7 +1,7 @@
 extends Area2D
 signal hit
 
-export var speed = 400  # How fast the player will move (pixels/sec).
+@export var speed = 400  # How fast the player will move (pixels/sec).
 var screen_size  # Size of the game window.
 
 const position_buffer_x = 25
@@ -14,7 +14,7 @@ var isDead = false
 func start(pos):
 	position = pos
 	isDead = false
-	$AnimatedSprite.animation = "walk"
+	$AnimatedSprite2D.animation = "walk"
 	show()
 	$CollisionShape2D.disabled = false
 
@@ -37,9 +37,9 @@ func _process(delta):
 			velocity.y -= 1
 	if velocity.length() > 0:
 		velocity = velocity.normalized() * speed
-		$AnimatedSprite.play()
+		$AnimatedSprite2D.play()
 	else:
-		$AnimatedSprite.stop()
+		$AnimatedSprite2D.stop()
 		
 	# gravity
 	gravity += 10
@@ -52,16 +52,16 @@ func _process(delta):
 	var isOnGround = position.y == screen_size.y - position_buffer_y
 	if !isDead:
 		if velocity.y != 0 && gravity > 0:
-			$AnimatedSprite.animation = "up"
-			$AnimatedSprite.flip_v = velocity.y > 0
+			$AnimatedSprite2D.animation = "up"
+			$AnimatedSprite2D.flip_v = velocity.y > 0
 		elif velocity.x != 0 || isOnGround:
-			$AnimatedSprite.animation = "walk"
-			$AnimatedSprite.flip_v = false
-			$AnimatedSprite.flip_h = velocity.x < 0
+			$AnimatedSprite2D.animation = "walk"
+			$AnimatedSprite2D.flip_v = false
+			$AnimatedSprite2D.flip_h = velocity.x < 0
 
 		if isCrouching:
 			$CollisionShape2D.scale.y = 0.5
-			$AnimatedSprite.animation = "crouch"
+			$AnimatedSprite2D.animation = "crouch"
 			if isOnGround:
 				position.y += crouch_buffer
 		else:
@@ -77,4 +77,4 @@ func _on_Player_body_entered(_body):
 	
 func die():
 	isDead = true
-	$AnimatedSprite.animation = "dead"
+	$AnimatedSprite2D.animation = "dead"

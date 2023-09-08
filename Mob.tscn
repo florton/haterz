@@ -1,51 +1,55 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=7 format=3 uid="uid://clx658501alue"]
 
-[ext_resource path="res://bad1.png" type="Texture" id=1]
-[ext_resource path="res://bad.png" type="Texture" id=2]
-[ext_resource path="res://bad2.png" type="Texture" id=3]
-[ext_resource path="res://Mob.gd" type="Script" id=4]
+[ext_resource type="Texture2D" uid="uid://b7mdrxl1ema2c" path="res://bad1.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://dl8tdoly0xin3" path="res://bad.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://dtg0e153mgynu" path="res://bad2.png" id="3"]
+[ext_resource type="Script" path="res://Mob.gd" id="4"]
 
-[sub_resource type="SpriteFrames" id=1]
-animations = [ {
-"frames": [ ExtResource( 1 ) ],
+[sub_resource type="SpriteFrames" id="1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2")
+}],
 "loop": true,
-"name": "walk",
+"name": &"fly",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 2 ) ],
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3")
+}],
 "loop": true,
-"name": "fly",
+"name": &"swim",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 3 ) ],
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1")
+}],
 "loop": true,
-"name": "swim",
+"name": &"walk",
 "speed": 5.0
-} ]
+}]
 
-[sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 16.0793, 28.3932 )
+[sub_resource type="RectangleShape2D" id="2"]
+size = Vector2(16.0793, 28.3932)
 
-[node name="Mob" type="RigidBody2D" groups=[
-"enemies",
-]]
+[node name="Mob" type="RigidBody2D" groups=["enemies"]]
 collision_mask = 0
 gravity_scale = 0.0
 custom_integrator = true
-script = ExtResource( 4 )
-__meta__ = {
-"_edit_group_": true
-}
+script = ExtResource("4")
 
-[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
-scale = Vector2( 0.25, 0.25 )
-frames = SubResource( 1 )
-animation = "swim"
-playing = true
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.25, 0.25)
+sprite_frames = SubResource("1")
+animation = &"swim"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource( 2 )
+shape = SubResource("2")
 
-[node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
-scale = Vector2( 2.88393, 4.04849 )
-[connection signal="screen_exited" from="VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_exited"]
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+scale = Vector2(2.88393, 4.04849)
+
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_exited"]

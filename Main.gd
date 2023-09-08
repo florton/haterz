@@ -1,6 +1,6 @@
 extends Node
 
-export (PackedScene) var Mob
+@export var Mob:PackedScene
 var score
 
 func _ready():
@@ -37,9 +37,10 @@ func _on_ScoreTimer_timeout():
 
 func _on_MobTimer_timeout():
 	# Choose a random location on Path2D.
-	$MobPath/MobSpawnLocation.offset = randi()
+	$MobPath/MobSpawnLocation.h_offset = randi()
+	$MobPath/MobSpawnLocation.v_offset = randi()
 	# Create a Mob instance and add it to the scene.
-	var mob = Mob.instance()
+	var mob = Mob.instantiate()
 	
 	add_child(mob)
 	# Set the mob's direction perpendicular to the path direction.
@@ -47,12 +48,12 @@ func _on_MobTimer_timeout():
 	# Set the mob's position to a random location.
 	mob.position = $MobPath/MobSpawnLocation.position
 	# Add some randomness to the direction.
-	direction += rand_range(-PI / 4, PI / 4)
+	direction += randf_range(-PI / 4, PI / 4)
 	mob.rotation = direction
 	# Set the velocity (speed & direction).
 	var min_speed = 250 + (score * 2) # Minimum speed range.
 	var max_speed = 500 + (score * 2) # Maximum speed range.
 	
-	mob.linear_velocity = Vector2(rand_range(min_speed , max_speed), 0)
+	mob.linear_velocity = Vector2(randf_range(min_speed , max_speed), 0)
 	mob.linear_velocity = mob.linear_velocity.rotated(direction)
 
