@@ -1,4 +1,5 @@
 extends Area2D
+
 signal hit
 
 export var speed = 400  # How fast the player will move (pixels/sec).
@@ -16,11 +17,16 @@ func start(pos):
 	isDead = false
 	$AnimatedSprite.animation = "walk"
 	show()
-	$CollisionShape2D.disabled = false
 
 func _ready():
 	screen_size = get_viewport_rect().size
 	hide()
+	
+func loadCollisionBox(name):
+	$StandCollisionR.disabled = name != "standR"
+	$StandCollisionL.disabled = name != "standL"
+	$JumpCollision.disabled = name != "jump"
+	$CrouchCollision.disabled = name != "crouch"
 	
 func _process(delta):
 	var velocity = Vector2()  # The player's movement vector.
@@ -53,27 +59,24 @@ func _process(delta):
 	if !isDead:
 		if velocity.y != 0 && gravity > 0:
 			$AnimatedSprite.animation = "up"
+			loadCollisionBox("jump")
 			$AnimatedSprite.flip_v = velocity.y > 0
-		elif velocity.x != 0 || isOnGround:
+		elif velocity.x != 0 || (isOnGround && !isCrouching):
 			$AnimatedSprite.animation = "walk"
+			loadCollisionBox("standL" if velocity.x < 0 else "standR")
 			$AnimatedSprite.flip_v = false
 			$AnimatedSprite.flip_h = velocity.x < 0
-
 		if isCrouching:
-			$CollisionShape2D.scale.y = 0.5
+			loadCollisionBox("crouch")
 			$AnimatedSprite.animation = "crouch"
 			if isOnGround:
 				position.y += crouch_buffer
-		else:
-			$CollisionShape2D.scale.y = 1
 		
 	if isOnGround:
 		gravity = 0
 
 func _on_Player_body_entered(_body):
-	#hide()  # Player disappears after being hit.
 	emit_signal("hit")
-	$CollisionShape2D.set_deferred("disabled", true)
 	
 func die():
 	isDead = true

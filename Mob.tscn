@@ -7,11 +7,6 @@
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
-"frames": [ ExtResource( 1 ) ],
-"loop": true,
-"name": "walk",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 2 ) ],
 "loop": true,
 "name": "fly",
@@ -21,21 +16,23 @@ animations = [ {
 "loop": true,
 "name": "swim",
 "speed": 5.0
+}, {
+"frames": [ ExtResource( 1 ) ],
+"loop": true,
+"name": "walk",
+"speed": 5.0
 } ]
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 16.0793, 28.3932 )
 
-[node name="Mob" type="RigidBody2D" groups=[
-"enemies",
-]]
+[node name="Mob" type="RigidBody2D" groups=["enemies"]]
 collision_mask = 0
 gravity_scale = 0.0
 custom_integrator = true
+contacts_reported = 1
+contact_monitor = true
 script = ExtResource( 4 )
-__meta__ = {
-"_edit_group_": true
-}
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 0.25, 0.25 )
@@ -47,5 +44,7 @@ playing = true
 shape = SubResource( 2 )
 
 [node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
-scale = Vector2( 2.88393, 4.04849 )
+position = Vector2( 9.53674e-07, -1.61524 )
+scale = Vector2( 0.8, 0.961524 )
+
 [connection signal="screen_exited" from="VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_exited"]

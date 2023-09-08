@@ -24,6 +24,13 @@ font_data = ExtResource( 4 )
 script = ExtResource( 2 )
 Mob = ExtResource( 3 )
 
+[node name="ColorRect" type="ColorRect" parent="."]
+margin_left = -11.0
+margin_top = -7.0
+margin_right = 1032.0
+margin_bottom = 611.0
+color = Color( 0, 0, 0, 1 )
+
 [node name="Player" parent="." instance=ExtResource( 1 )]
 speed = 550
 
@@ -65,24 +72,31 @@ margin_left = 24.0
 margin_top = 16.0
 margin_right = 70.0
 margin_bottom = 84.0
-custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0, 1, 0.27451, 1 )
+custom_fonts/font = SubResource( 3 )
 text = "0"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="LastScoreLabel" type="Label" parent="HUD"]
 margin_left = 912.89
 margin_top = 19.1784
 margin_right = 958.89
 margin_bottom = 87.1784
-custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0, 0.717647, 1, 1 )
+custom_fonts/font = SubResource( 3 )
 text = "0"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="StartLabel" type="Label" parent="HUD"]
+margin_left = 400.0
+margin_top = 264.0
+margin_right = 634.0
+margin_bottom = 332.0
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+custom_fonts/font = SubResource( 3 )
+text = "START"
+
 [connection signal="hit" from="Player" to="." method="game_over"]
 [connection signal="timeout" from="MobTimer" to="." method="_on_MobTimer_timeout"]
 [connection signal="timeout" from="ScoreTimer" to="." method="_on_ScoreTimer_timeout"]

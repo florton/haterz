@@ -2,9 +2,13 @@ extends Node
 
 export (PackedScene) var Mob
 var score
+var dead = false
 
 func _ready():
 	randomize()
+	var screen_size = OS.get_screen_size()
+	var window_size = OS.get_window_size()
+	OS.set_window_position(screen_size*0.5 - window_size*0.5)
 	new_game()
 
 func game_over():
@@ -12,6 +16,7 @@ func game_over():
 	$MobTimer.stop()
 	$HUD.reset_score()
 	$Player.die()
+	dead = true
 	var enemies = get_tree().get_nodes_in_group("enemies")
 	for enemy in enemies:
 		enemy.queue_free()
@@ -19,14 +24,17 @@ func game_over():
 func new_game():
 	score = 0
 	$Player.start($StartPosition.position)
+	$HUD/StartLabel.visible = true
 	$StartTimer.start()
 	$MobTimer.wait_time = 0.75
 
 func _process(_delta):	
 	if Input.is_action_pressed("ui_accept"):
-		new_game()
+		if dead:
+			new_game()
 
 func _on_StartTimer_timeout():
+	$HUD/StartLabel.visible = false
 	$MobTimer.start()
 	$ScoreTimer.start()
 
