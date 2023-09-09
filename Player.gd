@@ -14,11 +14,11 @@ const crouch_buffer = 30
 var gravity_acceleration = 0;
 var isDead = false
 
-var nearMisses = []
+var misses = []
 
 func start(pos):
 	position = pos
-	nearMisses = []
+	misses = []
 	isDead = false
 	$AnimatedSprite.animation = "walk"
 	show()
@@ -96,7 +96,8 @@ func die():
 func _on_Miss_body_exited(body):
 	var pos = body.position
 	yield(get_tree().create_timer(0.2), "timeout")
-	if !(body in nearMisses):
+	if !(body in misses):
+		misses.append(body)
 		var msg = Popup.instance()
 		msg.init("miss", Color(1,1,1))
 		msg.position = pos
@@ -107,8 +108,8 @@ func _on_Miss_body_exited(body):
 func _on_NearMiss_body_exited(body):
 	var pos = body.position
 	yield(get_tree().create_timer(0.1), "timeout")
-	if !(body in nearMisses):
-		nearMisses.append(body)
+	if !(body in misses):
+		misses.append(body)
 		var msg = Popup.instance()
 		msg.init("Near\nMiss", Color(0.764706, 0.247059, 1))
 		msg.position = pos

@@ -56,14 +56,14 @@ radius = 52.0096
 radius = 65.0077
 
 [sub_resource type="CapsuleShape2D" id=9]
-radius = 60.0
+radius = 65.0
 height = 72.0
 
 [sub_resource type="CircleShape2D" id=10]
-radius = 72.0
+radius = 80.0062
 
 [sub_resource type="CircleShape2D" id=11]
-radius = 86.0
+radius = 90.0
 
 [node name="Player" type="Area2D"]
 script = ExtResource( 1 )
@@ -93,7 +93,6 @@ shape = SubResource( 4 )
 [node name="CrouchCollision" type="CollisionShape2D" parent="."]
 position = Vector2( 1, 2 )
 rotation = -0.706858
-scale = Vector2( 1, 1 )
 shape = SubResource( 2 )
 
 [node name="JumpCollision" type="CollisionShape2D" parent="."]
