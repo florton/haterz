@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Player.gd" type="Script" id=1]
 [ext_resource path="res://up.png" type="Texture" id=2]
@@ -33,12 +33,8 @@ animations = [ {
 radius = 16.3107
 height = 84.7914
 
-[sub_resource type="CapsuleShape2D" id=4]
-radius = 16.8723
-height = 87.7794
-
 [sub_resource type="CapsuleShape2D" id=2]
-radius = 26.6763
+radius = 24.506
 height = 6.97091
 
 [sub_resource type="CapsuleShape2D" id=5]
@@ -75,23 +71,18 @@ __meta__ = {
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 0.25, 0.25 )
 frames = SubResource( 1 )
-animation = "walk"
+animation = "crouch"
 __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="StandCollisionR" type="CollisionShape2D" parent="."]
+[node name="StandCollision" type="CollisionShape2D" parent="."]
 position = Vector2( -5, 1 )
 rotation = -0.0994838
 shape = SubResource( 3 )
 
-[node name="StandCollisionL" type="CollisionShape2D" parent="."]
-position = Vector2( 5, 5 )
-rotation = 0.118682
-shape = SubResource( 4 )
-
 [node name="CrouchCollision" type="CollisionShape2D" parent="."]
-position = Vector2( 1, 2 )
+position = Vector2( -4, 2 )
 rotation = -0.706858
 shape = SubResource( 2 )
 

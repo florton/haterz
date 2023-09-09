@@ -28,10 +28,9 @@ func _ready():
 	hide()
 	
 func loadCollisionBox(name):
-	$StandCollisionR.disabled = name != "standR"
-	$StandCollisionL.disabled = name != "standL"
-	$Miss/StandCollisionMiss.disabled = name != "standL" && name != "standR"
-	$NearMiss/StandCollisionNMiss.disabled = name != "standL" && name != "standR"
+	$StandCollision.disabled = name != "stand"
+	$Miss/StandCollisionMiss.disabled = name != "stand"
+	$NearMiss/StandCollisionNMiss.disabled = name != "stand"
 	$JumpCollision.disabled = name != "jump"
 	$Miss/JumpCollisionMiss.disabled = name != "jump"
 	$NearMiss/JumpCollisionNMiss.disabled = name != "jump"
@@ -74,9 +73,8 @@ func _process(delta):
 			$AnimatedSprite.flip_v = velocity.y > 0
 		elif velocity.x != 0 || (isOnGround && !isCrouching):
 			$AnimatedSprite.animation = "walk"
-			loadCollisionBox("standL" if velocity.x < 0 else "standR")
-			$AnimatedSprite.flip_v = false
-			$AnimatedSprite.flip_h = velocity.x < 0
+			loadCollisionBox("stand")
+			scale.x = 1 if velocity.x < 0 else -1
 		if isCrouching:
 			loadCollisionBox("crouch")
 			$AnimatedSprite.animation = "crouch"
