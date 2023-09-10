@@ -71,9 +71,10 @@ func _process(delta):
 			$AnimatedSprite.animation = "up"
 			loadCollisionBox("jump")
 			$AnimatedSprite.flip_v = velocity.y > 0
-		elif velocity.x != 0 || (isOnGround && !isCrouching):
-			$AnimatedSprite.animation = "walk"
-			loadCollisionBox("stand")
+		elif velocity.x != 0:
+			if (isOnGround && !isCrouching):
+				$AnimatedSprite.animation = "walk"
+				loadCollisionBox("stand")
 			scale.x = 1 if velocity.x < 0 else -1
 		if isCrouching:
 			loadCollisionBox("crouch")
@@ -93,7 +94,7 @@ func die():
 
 func _on_Miss_body_exited(body):
 	var pos = body.position
-	yield(get_tree().create_timer(0.2), "timeout")
+	yield(get_tree().create_timer(0.1), "timeout")
 	if !(body in misses):
 		misses.append(body)
 		var msg = Popup.instance()
@@ -105,7 +106,7 @@ func _on_Miss_body_exited(body):
 
 func _on_NearMiss_body_exited(body):
 	var pos = body.position
-	yield(get_tree().create_timer(0.1), "timeout")
+	yield(get_tree().create_timer(0.05), "timeout")
 	if !(body in misses):
 		misses.append(body)
 		var msg = Popup.instance()
