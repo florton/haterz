@@ -59,9 +59,9 @@ func _process(delta):
 		
 	# gravity
 	gravity += 20 if isCrouching else 10
-		
-	position.x += velocity.x * delta	
-	position.y += ((velocity.y * 1.2) + gravity)* delta	
+			
+	position.x += velocity.x * delta
+	position.y += ((velocity.y * 0.9) + gravity)* delta
 	position.x = clamp(position.x, 0 + position_buffer_x, screen_size.x - position_buffer_x)
 	position.y = clamp(position.y, 0 + position_buffer_y, screen_size.y - position_buffer_y)
 	
@@ -70,17 +70,15 @@ func _process(delta):
 		if velocity.y != 0 && gravity > 0:
 			$AnimatedSprite.animation = "up"
 			loadCollisionBox("jump")
-			$AnimatedSprite.flip_v = velocity.y > 0
-		elif velocity.x != 0:
-			if (isOnGround && !isCrouching):
-				$AnimatedSprite.animation = "walk"
-				loadCollisionBox("stand")
-			scale.x = 1 if velocity.x < 0 else -1
+		elif velocity.x != 0 || (isOnGround && !isCrouching):
+			$AnimatedSprite.animation = "walk"
+			loadCollisionBox("stand")
 		if isCrouching:
 			loadCollisionBox("crouch")
 			$AnimatedSprite.animation = "crouch"
 			if isOnGround:
 				position.y += crouch_buffer
+		scale.x = -1 if velocity.x < 0 else 1
 		
 	if isOnGround:
 		gravity = 0
