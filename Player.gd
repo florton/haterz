@@ -37,7 +37,15 @@ func loadCollisionBox(name):
 	$CrouchCollision.disabled = name != "crouch"
 	$Miss/CrouchCollisionMiss.disabled = name != "crouch"
 	$NearMiss/CrouchCollisionNMiss.disabled = name != "crouch"
-	
+
+func createPopup(text, color, pos, important=false):
+	var Main = get_parent()
+	var msg = Popup.instance()
+	msg.init(text, color, important)
+	msg.position = pos
+	if !Main.dead:
+		Main.add_child(msg)
+
 func _process(delta):
 	var velocity = Vector2()  # The player's movement vector.
 	
@@ -83,7 +91,9 @@ func _process(delta):
 	if isOnGround:
 		gravity = 0
 
-func _on_Player_body_entered(_body):
+func _on_Player_body_entered(body):
+	if !get_parent().damage:
+		createPopup("Ouch D:", Color(1,0,0), body.position, true)
 	emit_signal("hit")
 	
 func die():
@@ -91,25 +101,22 @@ func die():
 	$AnimatedSprite.animation = "dead"
 
 func _on_Miss_body_exited(body):
-	var pos = body.position
-	yield(get_tree().create_timer(0.1), "timeout")
-	if !(body in misses):
-		misses.append(body)
-		var msg = Popup.instance()
-		msg.init("miss", Color(1,1,1))
-		msg.position = pos
-		if !get_parent().dead:
-			get_parent().score += 1
-			get_parent().add_child(msg)
+	var Main = get_parent()
+	if !get_parent().damage:
+		var pos = body.position
+		yield(get_tree().create_timer(0.1), "timeout")
+		if !(body in misses):
+			Main.salt += 15
+			misses.append(body)
+			var msg = Popup.instance()
+			createPopup("Miss", Color(1,1,1), pos)
 
 func _on_NearMiss_body_exited(body):
-	var pos = body.position
-	yield(get_tree().create_timer(0.05), "timeout")
-	if !(body in misses):
-		misses.append(body)
-		var msg = Popup.instance()
-		msg.init("Near\nMiss", Color(0.764706, 0.247059, 1))
-		msg.position = pos
-		if !get_parent().dead:
-			get_parent().score += 2
-			get_parent().add_child(msg)
+	var Main = get_parent()
+	if !get_parent().damage:
+		var pos = body.position
+		yield(get_tree().create_timer(0.05), "timeout")
+		if !(body in misses):
+			Main.salt += 25
+			misses.append(body)
+			createPopup("Near\nMiss", Color(0.764706, 0.247059, 1), pos)

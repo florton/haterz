@@ -5,6 +5,10 @@ var Boss = preload("Boss.tscn")
 
 var score
 var dead = false
+var salt = 0
+var lives = 1
+
+var damage = false
 
 func _ready():
 	randomize()
@@ -17,23 +21,32 @@ func game_over():
 	$ScoreTimer.stop()
 	$MobTimer.stop()
 	$BossTimer.stop()
-	$HUD.reset_score()
 	$Player.die()
 	dead = true
 
 func new_game():
 	score = 0
+	salt = 0
+	lives = 1
 	dead = false
+	$HUD.reset_score()
 	$Player.start($StartPosition.position)
 	$HUD/StartLabel.visible = true
+	$HUD/Lives.setLives(1)
 	$StartTimer.start()
 	$MobTimer.wait_time = 0.75
 	$BossTimer.wait_time = 3
+	$DamageTimer.wait_time = 1.5
 
 func _process(_delta):	
 	if Input.is_action_pressed("ui_accept"):
 		if dead:
 			new_game()
+	$HUD/Salt.value = salt
+	if salt > 95:
+		salt = 0
+		lives = clamp(lives + 1, 0, 3)
+		$HUD/Lives.setLives(lives)
 
 func _on_StartTimer_timeout():
 	$HUD/StartLabel.visible = false
@@ -72,3 +85,18 @@ func _on_MobTimer_timeout():
 
 func _on_Bosstimer_timeout():
 	spawn(Boss)
+
+func _on_DamageTimer_timeout():
+	$Player/AnimatedSprite.modulate = Color(1,1,1)
+	damage = false
+
+func _on_Player_hit():
+	if !damage:
+		if lives > 0:
+			damage = true
+			$DamageTimer.start()
+			$Player/AnimatedSprite.modulate = Color(1, 0.164706, 0.164706)
+			lives -= 1
+			$HUD/Lives.setLives(lives)
+		else:
+			game_over()
