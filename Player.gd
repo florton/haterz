@@ -92,6 +92,7 @@ func _process(delta):
 		gravity = 0
 
 func _on_Player_body_entered(body):
+	misses.append(body)
 	if !get_parent().damage:
 		createPopup("Ouch D:", Color(1,0,0), body.position, true)
 	emit_signal("hit")

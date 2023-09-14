@@ -14,7 +14,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="Super beet boi"
+config/name="Dodge Your Haters"
 run/main_scene="res://Main.tscn"
 config/icon="res://icon.png"
 
