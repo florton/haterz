@@ -38,15 +38,20 @@ func new_game():
 	$BossTimer.wait_time = 3
 	$DamageTimer.wait_time = 1.5
 
+func maxSalt():
+	salt = 0
+	lives = clamp(lives + 1, 0, 3)
+	$HUD/Lives.setLives(lives)
+	var popupPos = Vector2($Player.position.x, $Player.position.x + 30)
+	$Player.createPopup("Extra Life!", Color("#fff200"), popupPos)
+
 func _process(_delta):	
 	if Input.is_action_pressed("ui_accept"):
 		if dead:
 			new_game()
 	$HUD/Salt.value = salt
 	if salt > 95:
-		salt = 0
-		lives = clamp(lives + 1, 0, 3)
-		$HUD/Lives.setLives(lives)
+		maxSalt()
 
 func _on_StartTimer_timeout():
 	$HUD/StartLabel.visible = false

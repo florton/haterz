@@ -10,7 +10,6 @@ func init(text, color, i=false):
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if get_parent().damage && !important:
-		print($Label.text, important)
 		queue_free()
 
 
