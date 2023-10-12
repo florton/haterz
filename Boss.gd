@@ -5,7 +5,7 @@ func _ready():
 	$AnimatedSprite.frame = randi() % 3
 	
 func _process(delta):
-	if get_parent().dead:
+	if get_parent().lives <= 0:
 		queue_free()
 	
 func _on_VisibilityNotifier2D_screen_exited():

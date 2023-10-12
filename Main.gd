@@ -4,9 +4,9 @@ var Mob = preload("Mob.tscn")
 var Boss = preload("Boss.tscn")
 
 var score
-var dead = false
 var salt = 0
 var lives = 1
+const max_lives = 4
 
 var damage = false
 
@@ -22,17 +22,15 @@ func game_over():
 	$MobTimer.stop()
 	$BossTimer.stop()
 	$Player.die()
-	dead = true
 
 func new_game():
 	score = 0
 	salt = 0
-	lives = 1
-	dead = false
+	lives = 2
 	$HUD.reset_score()
 	$Player.start($StartPosition.position)
 	$HUD/StartLabel.visible = true
-	$HUD/Lives.setLives(1)
+	$HUD/Lives.setLives(lives)
 	$StartTimer.start()
 	$MobTimer.wait_time = 0.75
 	$BossTimer.wait_time = 3
@@ -40,14 +38,14 @@ func new_game():
 
 func maxSalt():
 	salt = 0
-	lives = clamp(lives + 1, 0, 3)
+	lives = clamp(lives + 1, 0, max_lives)
 	$HUD/Lives.setLives(lives)
 	var popupPos = Vector2($Player.position.x, $Player.position.x + 30)
 	$Player.createPopup("Extra Life!", Color("#fff200"), popupPos)
 
 func _process(_delta):	
 	if Input.is_action_pressed("ui_accept"):
-		if dead:
+		if lives <= 0:
 			new_game()
 	$HUD/Salt.value = salt
 	if salt > 95:
@@ -100,7 +98,6 @@ func _on_Player_hit():
 		if lives > 0:
 			damage = true
 			$DamageTimer.start()
-			$Player/AnimatedSprite.modulate = Color(1, 0.164706, 0.164706)
 			lives -= 1
 			$HUD/Lives.setLives(lives)
 		else:
