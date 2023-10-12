@@ -15,13 +15,21 @@ func _ready():
 	var screen_size = OS.get_screen_size()
 	var window_size = OS.get_window_size()
 	OS.set_window_position(screen_size*0.5 - window_size*0.5)
+	loadData()
 	new_game()
+
+func loadData():
+	var file = File.new()
+	file.open("user://hate.dat", File.READ)
+	var content = file.get_as_text()
+	var highScore = int(content)
+	$HUD.update_highscore(highScore)
+	file.close()
 
 func game_over():
 	$ScoreTimer.stop()
 	$MobTimer.stop()
 	$BossTimer.stop()
-	$Player.die()
 
 func new_game():
 	score = 0
@@ -95,10 +103,10 @@ func _on_DamageTimer_timeout():
 
 func _on_Player_hit():
 	if !damage:
+		lives -= 1
 		if lives > 0:
 			damage = true
 			$DamageTimer.start()
-			lives -= 1
 			$HUD/Lives.setLives(lives)
 		else:
 			game_over()
