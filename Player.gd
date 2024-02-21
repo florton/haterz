@@ -10,11 +10,12 @@ var screen_size  # Size of the game window.
 const position_buffer_x = 25
 const position_buffer_y = 60
 const crouch_buffer = 30
-const jump_boost = 1.25
-const grav_boost = 1.1
-const factor = 66
+const jump_boost = 0.8
+const grav_boost = 3
+const factor = 60
+const air_factor = 35
 
-var gravity_acceleration = 0;
+var gravity_acceleration = 10;
 
 var misses = []
 
@@ -50,12 +51,14 @@ func createPopup(text, color, pos, important=false):
 func _process(delta):
 	var velocity = Vector2()  # The player's movement vector.
 	
+	var isOnGround = position.y >= screen_size.y - position_buffer_y
+		
 	var isCrouching = false
 	if get_parent().lives > 0:
 		if Input.is_action_pressed("ui_right"):
-			velocity.x += 1 * delta * factor
+			velocity.x += 1 * delta * (factor if isOnGround else air_factor)
 		if Input.is_action_pressed("ui_left"):
-			velocity.x -= 1 * delta * factor
+			velocity.x -= 1 * delta * (factor if isOnGround else air_factor)
 		if Input.is_action_pressed("ui_down"):
 			isCrouching = true
 		if Input.is_action_pressed("ui_up"):
@@ -74,7 +77,7 @@ func _process(delta):
 	position.x = clamp(position.x, 0 + position_buffer_x, screen_size.x - position_buffer_x)
 	position.y = clamp(position.y, 0 + position_buffer_y, screen_size.y - position_buffer_y)
 	
-	var isOnGround = position.y == screen_size.y - position_buffer_y
+#	isOnGround = position.y == screen_size.y - position_buffer_y
 	if get_parent().lives > 0:
 		if velocity.y != 0 && gravity > 0:
 			$AnimatedSprite.animation = "up"
