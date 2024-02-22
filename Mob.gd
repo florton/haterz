@@ -7,7 +7,7 @@ func _ready():
 	$AnimatedSprite.animation = mob_types[randi() % mob_types.size()]
 	$AnimatedSprite.frame = randi() % 3
 	
-func _process(delta):
+func _physics_process(delta):
 	if get_parent().lives <= 0:
 		queue_free()
 	

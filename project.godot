@@ -27,6 +27,8 @@ window/stretch/aspect="keep"
 
 placement=false
 window=false
+frame=false
+framerate=false
 
 [input]
 
