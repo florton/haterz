@@ -10,9 +10,9 @@ var screen_size  # Size of the game window.
 const position_buffer_x = 25
 const position_buffer_y = 60
 const crouch_buffer = 30
-const jump_boost = 0.85
+const jump_boost = 1
 const grav_boost = 2
-const factor = 2
+const factor = 1.8
 const air_factor = 1
 
 var gravity_acceleration = 10;
@@ -44,10 +44,11 @@ func createPopup(text, color, pos, important=false):
 	var Main = get_parent()
 	var msg = Popup.instance()
 	msg.init(text, color, important)
-	msg.position = pos
+	msg.position.x = pos.x
+	msg.position.y = clamp(pos.y, 30, 550)
 	if Main.lives > 0:
 		Main.add_child(msg)
-
+	
 func _physics_process(delta):
 	var velocity = Vector2()  # The player's movement vector.
 	
